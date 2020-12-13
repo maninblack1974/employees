@@ -14,7 +14,7 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 const teamMembers = [];
-const emptyId = [];
+const idArray = [];
 
 const questionsEmployee = [
     {
@@ -45,7 +45,7 @@ function createManager() {
     inquirer.prompt(questionsEmployee).then(function(data){
         const manager = new Manager(data.nameManager, data.managerId, data.emailManager, data.officeNumber);
         teamMembers.push(manager);
-        emptyId.push(data.managerId);
+        idArray.push(data.managerId);
         createTeam();
     });
 };
@@ -67,7 +67,7 @@ function createTeam() {
             createEngineer();
         } else if (data.memberChoice === "Intern"){
             createIntern();
-        } else (outputTeam());
+        } else (renderTeam());
     });
 };
 
@@ -96,7 +96,7 @@ function createEngineer() {
     ]). then(function(data){
         const engineer = new Engineer(data.engineerName, data.engineerId, data.engineerEmail, data.engineerGithub);
         teamMembers.push(engineer);
-        emptyId.push(data.engineerId);
+        idArray.push(data.engineerId);
         createTeam();
     });
 };
@@ -126,13 +126,21 @@ function createIntern() {
     ]). then(function(data){
         const intern = new Intern(data.internName, data.internId, data.internEmail, data.internSchool);
         teamMembers.push(intern);
-        emptyId.push(data.internId);
+        idArray.push(data.internId);
         createTeam();
     });
 };
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
+function renderTeam() {
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR)
+    }
+    fs.writeFileSync(outputPath, render(teamMembers), "utf-8");
+}
+
+createManager();
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
