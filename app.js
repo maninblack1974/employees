@@ -41,7 +41,7 @@ const questionsEmployee = [
 
 
 function createManager() {
-    console.log("Building your team");
+    console.log("Let us build your team");
     inquirer.prompt(questionsEmployee).then(function(data){
         const manager = new Manager(data.nameManager, data.managerId, data.emailManager, data.officeNumber);
         teamMembers.push(manager);
